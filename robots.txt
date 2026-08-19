@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://focused-realty.github.io/sitemap.xml
