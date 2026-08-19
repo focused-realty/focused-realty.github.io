@@ -103,8 +103,9 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--bronze-2);outline-o
 .hero-in{padding-block:0 clamp(26px,4.4vw,46px);display:grid;gap:clamp(15px,1.9vw,21px)}
 .eyebrow{font-size:13.5px;font-weight:600;letter-spacing:.22em;color:var(--cream);
   display:flex;align-items:center;gap:14px;text-shadow:0 2px 14px rgba(0,0,0,.75)}
-.eyebrow::after{content:"";height:1px;width:clamp(40px,7vw,110px);
-  background:linear-gradient(var(--_d,90deg),var(--bronze),transparent)}
+/* over a warm sunset a 1px bronze hairline vanishes - cream, and thicker */
+.eyebrow::after{content:"";height:2px;width:clamp(46px,7vw,110px);opacity:.9;
+  background:linear-gradient(var(--_d,90deg),var(--cream),rgba(243,241,232,0))}
 [dir="rtl"] .eyebrow{--_d:270deg}
 .hero h1{font-size:clamp(44px,10.4vw,132px);letter-spacing:-.028em;line-height:.92;
   color:#fff;text-shadow:0 6px 44px rgba(0,0,0,.52)}
@@ -274,7 +275,7 @@ footer{border-top:1px solid var(--line-2);padding-block:34px 42px}
 
 <header class="top">
   <div class="wrap top-in">
-    <a href="./" aria-label="Sofrim Compound · Focused Realty"><img class="mark" src="assets/logo_rev.png" width="1710" height="981" alt="פוקוס נדל&quot;ן — Focused Realty"></a>
+    <a href="./" aria-label="Sofrim Compound · Focused Realty"><img class="mark" src="assets/logo_rev.png" width="1710" height="981" alt="Focused Realty"></a>
     <nav class="nav">
       <span class="jump"><a href="#film">Film</a><a href="#why">Why here</a><a href="#mix">Properties</a><a href="#contact">Contact</a></span>
       <a class="pill" href="./">עברית</a>
@@ -317,7 +318,7 @@ footer{border-top:1px solid var(--line-2);padding-block:34px 42px}
     <figure class="rv"><img src="assets/sign.jpg" alt="A Focused Realty for-sale banner on a balcony in the compound" width="1000" height="1080" loading="lazy" decoding="async"></figure>
     <div>
       <div class="kicker rv">Why us</div>
-      <h2 class="rv">Sofrim Compound<em>is Focused Realty</em></h2>
+      <h2 class="rv">Sofrim Compound <em>is Focused Realty</em></h2>
       <p class="rv">We are not a nationwide agency. We work this compound, and only this compound — every building, every floor, everything that moves. That is the difference between searching for a property and knowing where it is.</p>
     </div>
   </div>
