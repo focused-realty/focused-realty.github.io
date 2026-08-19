@@ -140,9 +140,30 @@ section{padding-block:clamp(56px,7.4vw,98px)}
 
 /* ---------- film ---------- */
 .film{margin-top:clamp(24px,3.2vw,38px);border:1px solid var(--line);
-  background:#000;overflow:hidden;max-width:1020px;
+  background:#000;overflow:hidden;max-width:1020px;position:relative;
   box-shadow:0 34px 80px -40px rgba(0,0,0,.9)}
-.film video{width:100%;height:auto;aspect-ratio:16/9;background:#000}
+.film video{width:100%;height:auto;aspect-ratio:16/9;background:#000;cursor:pointer}
+/* One surface owns every click on the picture, so the browser's own controls
+   never see a second toggle. It stops short of the control strip, generously,
+   because that strip's height differs between browsers. */
+.film .play{position:absolute;inset:0 0 max(58px,13%) 0;display:grid;place-items:center;
+  border:0;padding:0;cursor:pointer;color:var(--cream);
+  background:linear-gradient(rgba(13,17,10,.10),rgba(13,17,10,.34));
+  transition:opacity .3s ease,background .3s ease}
+.film .play i{width:clamp(62px,6.4vw,86px);aspect-ratio:1;border-radius:50%;
+  display:grid;place-items:center;background:rgba(200,153,107,.95);
+  box-shadow:0 14px 44px -12px rgba(0,0,0,.85);
+  transition:transform .25s cubic-bezier(.2,.7,.3,1),background .25s}
+.film .play svg{width:36%;height:36%;fill:#14180D;display:block}
+.film .play .ic-play{margin-inline-start:9%}
+.film .play .ic-pause{display:none;margin:0}
+.film .play:hover i,.film .play:focus-visible i{transform:scale(1.08);background:var(--bronze-2)}
+/* while it plays the surface goes invisible but stays clickable - click to pause */
+.film.playing .play{opacity:0;background:transparent}
+.film.playing .play:hover,.film.playing .play:focus-visible{opacity:1}
+.film.playing .ic-play{display:none}
+.film.playing .ic-pause{display:block}
+@media (prefers-reduced-motion:reduce){.film .play,.film .play i{transition:none}}
 .film-note{margin-top:13px;max-width:1020px;font-size:13.5px;color:var(--mute-2);
   display:flex;gap:8px 18px;align-items:center;flex-wrap:wrap;
   justify-content:space-between}
@@ -307,6 +328,13 @@ footer{border-top:1px solid var(--line-2);padding-block:34px 42px}
       <video controls preload="none" playsinline poster="assets/poster.jpg">
         <source src="assets/film-en.mp4" type="video/mp4">
       </video>
+      <button class="play" type="button" aria-label="Play the film"
+              data-play="Play the film" data-pause="Pause the film">
+        <i>
+          <svg class="ic-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l13-7.5z"/></svg>
+          <svg class="ic-pause" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5h3.4v14H7zm6.6 0H17v14h-3.4z"/></svg>
+        </i>
+      </button>
     </div>
     <p class="film-note rv"><span>The film runs 85 seconds.</span>
       <a href="assets/film-en-1080.mp4" download>Download in full quality · 1080p</a></p>
@@ -388,6 +416,25 @@ footer{border-top:1px solid var(--line-2);padding-block:34px 42px}
   }
   onScroll();
   addEventListener('scroll', onScroll, {passive:true});
+
+  // click anywhere on the picture to play or pause
+  document.querySelectorAll('.film').forEach(function(f){
+    var v = f.querySelector('video'), btn = f.querySelector('.play');
+    if (!v || !btn) return;
+    var labelPlay = btn.getAttribute('data-play');
+    var labelPause = btn.getAttribute('data-pause');
+    function sync(){
+      var playing = !v.paused && !v.ended;
+      f.classList.toggle('playing', playing);
+      btn.setAttribute('aria-label', playing ? labelPause : labelPlay);
+    }
+    btn.addEventListener('click', function(){
+      if (v.paused) { var p = v.play(); if (p && p.catch) { p.catch(function(){}); } }
+      else { v.pause(); }
+    });
+    ['play','pause','ended'].forEach(function(n){ v.addEventListener(n, sync); });
+    sync();
+  });
 
   var els = document.querySelectorAll('.rv');
   if (!('IntersectionObserver' in window)) {
