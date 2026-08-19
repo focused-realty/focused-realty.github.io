@@ -41,7 +41,7 @@
   --bronze-2:#E3BE95;
   --cream:#F3F1E8;
   --mute:#ABAF9C;
-  --mute-2:#7E8371;
+  --mute-2:#9AA085;
   --line:rgba(243,241,232,.14);
   --line-2:rgba(243,241,232,.07);
   --maxw:1220px;
@@ -101,8 +101,8 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--bronze-2);outline-o
 .hero::after{content:"";position:absolute;inset:0;z-index:-1;background:
   linear-gradient(180deg,rgba(13,17,10,.82) 0%,rgba(13,17,10,.28) 34%,rgba(13,17,10,.76) 72%,var(--ink) 100%)}
 .hero-in{padding-block:0 clamp(26px,4.4vw,46px);display:grid;gap:clamp(15px,1.9vw,21px)}
-.eyebrow{font-size:12px;font-weight:600;letter-spacing:.36em;color:var(--bronze-2);
-  display:flex;align-items:center;gap:14px}
+.eyebrow{font-size:13.5px;font-weight:600;letter-spacing:.22em;color:var(--cream);
+  display:flex;align-items:center;gap:14px;text-shadow:0 2px 14px rgba(0,0,0,.75)}
 .eyebrow::after{content:"";height:1px;width:clamp(40px,7vw,110px);
   background:linear-gradient(var(--_d,90deg),var(--bronze),transparent)}
 [dir="rtl"] .eyebrow{--_d:270deg}
@@ -123,13 +123,14 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--bronze-2);outline-o
 .facts div{padding:clamp(13px,1.5vw,19px) 4px 2px;border-inline-start:1px solid var(--line-2)}
 .facts div:first-child{border-inline-start:0}
 .facts b{display:block;font-family:'Secular One',sans-serif;font-weight:400;
-  font-size:clamp(15px,1.5vw,19px);color:#fff}
-.facts span{font-size:12.5px;letter-spacing:.14em;color:var(--mute-2)}
+  font-size:clamp(15px,1.5vw,19px);color:#fff;text-shadow:0 2px 14px rgba(0,0,0,.6)}
+.facts span{font-size:13px;letter-spacing:.08em;color:#C3C7B4;
+  text-shadow:0 1px 10px rgba(0,0,0,.6)}
 
 /* ---------- sections ---------- */
 section{padding-block:clamp(56px,7.4vw,98px)}
 .ruled{border-top:1px solid var(--line-2)}
-.kicker{font-size:11.5px;font-weight:700;letter-spacing:.32em;color:var(--bronze);
+.kicker{font-size:12.5px;font-weight:700;letter-spacing:.24em;color:var(--bronze-2);
   display:flex;align-items:center;gap:12px;margin-bottom:15px}
 .kicker::before{content:"";width:22px;height:1px;background:var(--bronze)}
 .sec-h{font-size:clamp(27px,3.8vw,44px);max-width:22ch}
@@ -189,7 +190,7 @@ section{padding-block:clamp(56px,7.4vw,98px)}
   border-radius:50%;transform:translateY(-3px)}
 .spec .row b{font-family:'Secular One',sans-serif;font-weight:400;
   font-size:clamp(17px,1.9vw,21px);color:#fff}
-.spec .row span{color:var(--mute-2);font-size:14.5px;letter-spacing:.12em}
+.spec .row span{color:var(--mute-2);font-size:15px;letter-spacing:.06em}
 
 /* ---------- mix ---------- */
 .mix{display:grid;gap:1px;background:var(--line-2);margin-top:clamp(20px,2.7vw,32px);
@@ -211,7 +212,7 @@ section{padding-block:clamp(56px,7.4vw,98px)}
 .gal figure{margin:0;position:relative;overflow:hidden;background:var(--ink-3)}
 .gal figure.sheet{background:#EFEDE4}
 .gal figure.sheet img{object-fit:contain;padding:14px}
-.gal figure.sheet figcaption{background:linear-gradient(transparent,rgba(18,22,12,.78))}
+.gal figure.sheet figcaption{color:#2B3320;background:linear-gradient(transparent,rgba(239,237,228,.94) 42%)}
 .gal img{width:100%;height:100%;object-fit:cover;
   transition:transform .85s cubic-bezier(.2,.7,.3,1)}
 .gal figure:hover img{transform:scale(1.045)}
@@ -243,7 +244,7 @@ section{padding-block:clamp(56px,7.4vw,98px)}
 .chan:hover{background:var(--ink-3)}
 .chan svg{width:21px;height:21px;color:var(--bronze);flex:none}
 .chan .t{display:grid;gap:1px;min-width:0}
-.chan .k{font-size:11px;letter-spacing:.2em;color:var(--mute-2);font-weight:600}
+.chan .k{font-size:11.5px;letter-spacing:.15em;color:var(--mute-2);font-weight:600}
 .chan .v{font-weight:600;font-size:15.5px;overflow-wrap:anywhere;color:var(--cream)}
 
 footer{border-top:1px solid var(--line-2);padding-block:34px 42px}
@@ -251,7 +252,7 @@ footer{border-top:1px solid var(--line-2);padding-block:34px 42px}
   align-items:center}
 .foot-in img{height:54px;width:auto}
 .foot-in .fx{color:var(--mute-2);font-size:14px}
-.note{color:#5E6353;font-size:12.5px;margin-top:18px;max-width:56rem;line-height:1.6}
+.note{color:#8A8F7B;font-size:13px;margin-top:18px;max-width:56rem;line-height:1.6}
 
 .bar{position:fixed;inset-inline:0;bottom:0;z-index:95;display:none;
   background:rgba(13,17,10,.95);backdrop-filter:blur(14px);border-top:1px solid var(--line);
