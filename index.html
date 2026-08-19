@@ -32,21 +32,22 @@
 <style>
 *,*::before,*::after{box-sizing:border-box}
 :root{
-  --ink:#0E1209;          /* page ground */
-  --ink-2:#141A0F;        /* raised band */
-  --ink-3:#1A2114;        /* card */
-  --olive:#28331D;
+  --ink:#0D110A;
+  --ink-2:#12180E;
+  --ink-3:#19200F;
+  --olive:#242E1A;
+  --olive-2:#1B2314;
   --bronze:#C8996B;
-  --bronze-2:#E0B98F;
-  --cream:#F2F0E7;
-  --mute:#A7AB98;
-  --mute-2:#7C8170;
-  --line:rgba(242,240,231,.13);
-  --line-2:rgba(242,240,231,.07);
+  --bronze-2:#E3BE95;
+  --cream:#F3F1E8;
+  --mute:#ABAF9C;
+  --mute-2:#7E8371;
+  --line:rgba(243,241,232,.14);
+  --line-2:rgba(243,241,232,.07);
   --maxw:1220px;
   --pad:clamp(20px,5vw,52px);
 }
-html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth;scroll-padding-top:84px}
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 body{
   margin:0;background:var(--ink);color:var(--cream);
@@ -54,149 +55,172 @@ body{
   font-size:17px;line-height:1.62;font-weight:300;
   overflow-x:hidden;-webkit-font-smoothing:antialiased;
 }
+body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:100;
+  opacity:.05;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.86' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:190px 190px}
 h1,h2,h3{font-family:'Secular One','Assistant',Arial,sans-serif;font-weight:400;
-  margin:0;line-height:1.1;letter-spacing:-.01em;text-wrap:balance}
+  margin:0;line-height:1.1;letter-spacing:-.012em;text-wrap:balance}
 p{margin:0}
 a{color:inherit;text-decoration:none}
 img,video{display:block;max-width:100%}
+::selection{background:var(--bronze);color:#14180D}
 .wrap{max-width:var(--maxw);margin-inline:auto;padding-inline:var(--pad)}
 
-/* ---------- reveal ---------- */
-.rv{opacity:0;transform:translateY(18px);transition:opacity .7s ease,transform .7s cubic-bezier(.2,.7,.3,1)}
+.rv{opacity:0;transform:translateY(16px);transition:opacity .66s ease,transform .66s cubic-bezier(.2,.7,.3,1)}
 .rv.in{opacity:1;transform:none}
 @media (prefers-reduced-motion:reduce){.rv{opacity:1;transform:none;transition:none}}
 
 /* ---------- header ---------- */
-.top{position:fixed;inset-inline:0;top:0;z-index:60;
-  transition:background .3s ease,border-color .3s ease,backdrop-filter .3s}
-.top.solid{background:rgba(14,18,9,.86);backdrop-filter:blur(16px) saturate(1.2);
+.top{position:fixed;inset-inline:0;top:0;z-index:80;
+  transition:background .3s ease,border-color .3s ease}
+.top.solid{background:rgba(13,17,10,.88);backdrop-filter:blur(18px) saturate(1.25);
   border-bottom:1px solid var(--line-2)}
-.top-in{display:flex;align-items:center;justify-content:space-between;gap:16px;
-  padding-block:14px}
+.top-in{display:flex;align-items:center;justify-content:space-between;gap:20px;
+  padding-block:13px}
 .top .mark{height:42px;width:auto}
-.nav{display:flex;align-items:center;gap:8px}
-.nav a{font-size:14px;font-weight:600;letter-spacing:.03em;padding:8px 15px;
+.nav{display:flex;align-items:center;gap:6px}
+.jump{display:none;align-items:center;gap:2px;margin-inline-end:8px}
+.jump a{font-size:14.5px;font-weight:400;color:var(--mute);padding:8px 13px;
+  border-radius:1px;transition:color .2s}
+.jump a:hover{color:var(--bronze-2)}
+@media (min-width:1000px){.jump{display:flex}}
+.nav .pill{font-size:14px;font-weight:600;letter-spacing:.03em;padding:9px 16px;
   border:1px solid var(--line);border-radius:1px;color:var(--cream);
   transition:border-color .2s,color .2s,background .2s;white-space:nowrap}
-.nav a:hover{border-color:var(--bronze);color:var(--bronze-2)}
-.nav a.solid-cta{background:var(--bronze);border-color:var(--bronze);color:#14180D}
-.nav a.solid-cta:hover{background:var(--bronze-2);border-color:var(--bronze-2);color:#14180D}
+.nav .pill:hover{border-color:var(--bronze);color:var(--bronze-2)}
+.nav .pill.solid-cta{background:var(--bronze);border-color:var(--bronze);color:#14180D}
+.nav .pill.solid-cta:hover{background:var(--bronze-2);border-color:var(--bronze-2)}
 a:focus-visible,button:focus-visible{outline:2px solid var(--bronze-2);outline-offset:3px}
 
 /* ---------- hero ---------- */
 .hero{position:relative;min-height:100svh;display:flex;flex-direction:column;
   justify-content:flex-end;isolation:isolate;overflow:hidden}
 .hero-img{position:absolute;inset:-3%;z-index:-2;background-size:cover;
-  background-position:50% 44%;animation:drift 40s ease-in-out infinite alternate}
+  background-position:50% 44%;animation:drift 44s ease-in-out infinite alternate}
 @keyframes drift{from{transform:scale(1.03)}to{transform:scale(1.12) translateY(-1.4%)}}
 @media (prefers-reduced-motion:reduce){.hero-img{animation:none;transform:scale(1.05)}}
 .hero::after{content:"";position:absolute;inset:0;z-index:-1;background:
-  linear-gradient(180deg,rgba(14,18,9,.80) 0%,rgba(14,18,9,.30) 34%,rgba(14,18,9,.74) 72%,var(--ink) 100%)}
-.hero-in{padding-block:0 clamp(30px,5vw,54px);display:grid;gap:clamp(16px,2vw,22px)}
+  linear-gradient(180deg,rgba(13,17,10,.82) 0%,rgba(13,17,10,.28) 34%,rgba(13,17,10,.76) 72%,var(--ink) 100%)}
+.hero-in{padding-block:0 clamp(26px,4.4vw,46px);display:grid;gap:clamp(15px,1.9vw,21px)}
 .eyebrow{font-size:12px;font-weight:600;letter-spacing:.36em;color:var(--bronze-2);
   display:flex;align-items:center;gap:14px}
 .eyebrow::after{content:"";height:1px;width:clamp(40px,7vw,110px);
   background:linear-gradient(var(--_d,90deg),var(--bronze),transparent)}
 [dir="rtl"] .eyebrow{--_d:270deg}
-.hero h1{font-size:clamp(44px,10.4vw,132px);letter-spacing:-.025em;line-height:.92;
-  color:#fff;text-shadow:0 6px 40px rgba(0,0,0,.5)}
-.hero .lead{font-size:clamp(16.5px,1.75vw,21px);color:#D7D4C7;max-width:33rem;line-height:1.55}
-.cta{display:flex;flex-wrap:wrap;gap:11px;margin-top:4px}
+.hero h1{font-size:clamp(44px,10.4vw,132px);letter-spacing:-.028em;line-height:.92;
+  color:#fff;text-shadow:0 6px 44px rgba(0,0,0,.52)}
+.hero .lead{font-size:clamp(16.5px,1.75vw,21px);color:#DAD7CA;max-width:33rem;line-height:1.55}
+.cta{display:flex;flex-wrap:wrap;gap:11px;margin-top:3px}
 .btn{display:inline-flex;align-items:center;gap:9px;font-weight:700;font-size:16px;
-  padding:14px 26px;border-radius:1px;transition:transform .18s,background .2s,border-color .2s,color .2s}
+  padding:14px 26px;border-radius:1px;
+  transition:transform .18s,background .2s,border-color .2s,color .2s}
 .btn svg{width:19px;height:19px;flex:none}
 .btn-a{background:var(--bronze);color:#14180D}
 .btn-a:hover{background:var(--bronze-2);transform:translateY(-2px)}
-.btn-b{border:1px solid rgba(242,240,231,.40);color:#F2F0E7}
+.btn-b{border:1px solid rgba(243,241,232,.42);color:#F3F1E8}
 .btn-b:hover{border-color:var(--bronze);color:var(--bronze-2);transform:translateY(-2px)}
-
-/* the hero earns its height: facts instead of dead space */
 .facts{border-top:1px solid var(--line);display:grid;
-  grid-template-columns:repeat(4,1fr);margin-top:clamp(20px,3vw,34px)}
-.facts div{padding:clamp(14px,1.6vw,20px) 4px 2px;border-inline-start:1px solid var(--line-2)}
+  grid-template-columns:repeat(4,1fr);margin-top:clamp(18px,2.6vw,30px)}
+.facts div{padding:clamp(13px,1.5vw,19px) 4px 2px;border-inline-start:1px solid var(--line-2)}
 .facts div:first-child{border-inline-start:0}
 .facts b{display:block;font-family:'Secular One',sans-serif;font-weight:400;
   font-size:clamp(15px,1.5vw,19px);color:#fff}
 .facts span{font-size:12.5px;letter-spacing:.14em;color:var(--mute-2)}
 
 /* ---------- sections ---------- */
-section{padding-block:clamp(64px,8.5vw,116px)}
+section{padding-block:clamp(56px,7.4vw,98px)}
+.ruled{border-top:1px solid var(--line-2)}
 .kicker{font-size:11.5px;font-weight:700;letter-spacing:.32em;color:var(--bronze);
-  display:flex;align-items:center;gap:12px;margin-bottom:16px}
+  display:flex;align-items:center;gap:12px;margin-bottom:15px}
 .kicker::before{content:"";width:22px;height:1px;background:var(--bronze)}
-.sec-h{font-size:clamp(27px,3.9vw,46px);max-width:20ch}
-.sec-p{color:var(--mute);max-width:38rem;margin-top:14px;font-size:17.5px}
+.sec-h{font-size:clamp(27px,3.8vw,44px);max-width:22ch}
+.sec-p{color:var(--mute);max-width:38rem;margin-top:13px;font-size:17.5px}
 .band-2{background:var(--ink-2)}
 
 /* ---------- film ---------- */
-.film{margin-top:clamp(26px,3.4vw,40px);border:1px solid var(--line);
-  background:#000;position:relative;overflow:hidden}
-.film video{width:100%;height:auto;background:#000}
-.film-note{margin-top:12px;font-size:13.5px;color:var(--mute-2);
-  display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-.film-note a{color:var(--bronze-2);border-bottom:1px solid rgba(200,153,107,.4)}
-.film-note a:hover{color:var(--bronze)}
+.film{margin-top:clamp(24px,3.2vw,38px);border:1px solid var(--line);
+  background:#000;overflow:hidden;max-width:1020px;
+  box-shadow:0 34px 80px -40px rgba(0,0,0,.9)}
+.film video{width:100%;height:auto;aspect-ratio:16/9;background:#000}
+.film-note{margin-top:13px;max-width:1020px;font-size:13.5px;color:var(--mute-2);
+  display:flex;gap:8px 18px;align-items:center;flex-wrap:wrap;
+  justify-content:space-between}
+.film-note a{color:var(--bronze-2);border-bottom:1px solid rgba(200,153,107,.38);
+  padding-bottom:1px;transition:color .2s,border-color .2s}
+.film-note a:hover{color:var(--bronze);border-color:var(--bronze)}
 
-/* ---------- statement band ---------- */
-.say{position:relative;isolation:isolate;overflow:hidden;
-  padding-block:clamp(84px,12vw,168px)}
-.say-img{position:absolute;inset:0;z-index:-2;background-size:cover;background-position:50% 62%}
-.say::after{content:"";position:absolute;inset:0;z-index:-1;background:
-  linear-gradient(var(--_g,100deg),rgba(14,18,9,.97) 30%,rgba(20,26,15,.86) 55%,rgba(14,18,9,.62)),
-  linear-gradient(180deg,rgba(14,18,9,.55),transparent 30%,rgba(14,18,9,.55))}
-[dir="rtl"] .say{--_g:260deg}
-.say h2{font-size:clamp(30px,5.6vw,66px);line-height:1.04;color:#fff}
+/* ---------- statement: the sign is the proof, so show it clean ---------- */
+.say{background:var(--olive);position:relative;overflow:hidden;
+  padding-block:clamp(52px,6.6vw,84px)}
+.say-in{display:grid;gap:clamp(28px,4.4vw,64px);align-items:center;
+  grid-template-columns:minmax(0,.86fr) minmax(0,1.14fr)}
+.say figure{margin:0;position:relative;border:1px solid rgba(243,241,232,.2);
+  overflow:hidden;aspect-ratio:1/1.05;
+  box-shadow:0 30px 70px -34px rgba(0,0,0,.85)}
+.say figure img{width:100%;height:100%;object-fit:cover}
+.say h2{font-size:clamp(30px,5vw,60px);line-height:1.04;color:#fff}
 .say h2 em{font-style:normal;display:block;color:var(--bronze-2)}
-.say p{margin-top:22px;max-width:34rem;font-size:clamp(16.5px,1.8vw,20px);color:#E6E3D6}
+.say p{margin-top:20px;max-width:34rem;font-size:clamp(16.5px,1.7vw,19.5px);color:#E4E1D4}
+@media (max-width:860px){
+  .say-in{grid-template-columns:1fr}
+  .say figure{aspect-ratio:4/3.1}
+}
 
-/* ---------- split: reasons + image ---------- */
+/* ---------- reasons + tall image ---------- */
 .split{display:grid;gap:clamp(28px,4vw,60px);align-items:start;
   grid-template-columns:minmax(0,1.25fr) minmax(0,.75fr)}
-.reasons{display:grid;gap:0;margin-top:clamp(22px,3vw,34px)}
-.reason{padding-block:clamp(20px,2.4vw,28px);border-top:1px solid var(--line-2);
-  display:grid;gap:7px}
+.reasons{display:grid;margin-top:clamp(20px,2.7vw,32px)}
+.reason{padding-block:clamp(19px,2.3vw,27px);border-top:1px solid var(--line-2);
+  display:grid;gap:6px}
 .reason:first-child{border-top:1px solid var(--line)}
 .reason h3{font-size:clamp(19px,2vw,23px);color:#fff}
 .reason p{color:var(--mute);font-size:16.5px;max-width:44ch}
-.split figure{margin:0;position:relative;overflow:hidden;border:1px solid var(--line);
-  aspect-ratio:3/4.3;position:sticky;top:104px}
+.split figure{margin:0;overflow:hidden;border:1px solid var(--line);
+  aspect-ratio:3/4.3;position:sticky;top:100px}
 .split figure img{width:100%;height:100%;object-fit:cover}
 @media (max-width:900px){.split{grid-template-columns:1fr}.split figure{display:none}}
 
-/* ---------- spec table ---------- */
-.spec{margin-top:clamp(22px,3vw,32px);border-top:1px solid var(--line)}
-.spec .row{display:grid;grid-template-columns:1fr auto;gap:18px;align-items:baseline;
-  padding-block:clamp(14px,1.7vw,19px);border-bottom:1px solid var(--line-2)}
+/* ---------- spec ---------- */
+.spec{margin-top:clamp(20px,2.7vw,30px);border-top:1px solid var(--line)}
+.spec .row{display:grid;grid-template-columns:auto 1fr auto;gap:16px;align-items:baseline;
+  padding-block:clamp(13px,1.6vw,18px);border-bottom:1px solid var(--line-2);
+  transition:border-color .25s}
+.spec .row:hover{border-bottom-color:var(--bronze)}
+.spec .row i{font-style:normal;width:7px;height:7px;border:1px solid var(--bronze);
+  border-radius:50%;transform:translateY(-3px)}
 .spec .row b{font-family:'Secular One',sans-serif;font-weight:400;
   font-size:clamp(17px,1.9vw,21px);color:#fff}
 .spec .row span{color:var(--mute-2);font-size:14.5px;letter-spacing:.12em}
 
 /* ---------- mix ---------- */
-.mix{display:grid;gap:1px;background:var(--line-2);margin-top:clamp(22px,3vw,34px);
+.mix{display:grid;gap:1px;background:var(--line-2);margin-top:clamp(20px,2.7vw,32px);
   grid-template-columns:repeat(auto-fit,minmax(224px,1fr))}
-.tile{background:var(--ink-3);padding:clamp(22px,2.4vw,30px) clamp(18px,2vw,24px);
-  display:grid;gap:8px;align-content:start;transition:background .25s}
-.tile:hover{background:#20291a}
+.tile{background:var(--ink-3);padding:clamp(21px,2.3vw,29px) clamp(18px,2vw,24px);
+  display:grid;gap:7px;align-content:start;position:relative;transition:background .25s}
+.tile::before{content:"";position:absolute;inset-inline:0;top:0;height:2px;
+  background:var(--bronze);transform:scaleX(0);transform-origin:var(--_o,left);
+  transition:transform .35s cubic-bezier(.2,.7,.3,1)}
+[dir="rtl"] .tile{--_o:right}
+.tile:hover{background:#1F2814}
+.tile:hover::before{transform:scaleX(1)}
 .tile h3{font-size:clamp(17px,1.8vw,20px);color:#fff}
 .tile p{color:var(--mute);font-size:15.5px}
 
-/* ---------- gallery: asymmetric, not a uniform grid ---------- */
-.gal{margin-top:clamp(22px,3vw,34px);display:grid;gap:12px;
+/* ---------- gallery ---------- */
+.gal{margin-top:clamp(20px,2.7vw,32px);display:grid;gap:12px;
   grid-template-columns:repeat(6,1fr)}
 .gal figure{margin:0;position:relative;overflow:hidden;background:var(--ink-3)}
 .gal figure.sheet{background:#EFEDE4}
 .gal figure.sheet img{object-fit:contain;padding:14px}
-.gal figure.sheet figcaption{background:linear-gradient(transparent,rgba(20,24,14,.72))}
-.gal img{width:100%;height:100%;object-fit:cover;transition:transform .8s cubic-bezier(.2,.7,.3,1)}
+.gal figure.sheet figcaption{background:linear-gradient(transparent,rgba(18,22,12,.78))}
+.gal img{width:100%;height:100%;object-fit:cover;
+  transition:transform .85s cubic-bezier(.2,.7,.3,1)}
 .gal figure:hover img{transform:scale(1.045)}
-.gal figcaption{position:absolute;inset-inline:0;bottom:0;padding:26px 16px 12px;
-  font-size:13.5px;letter-spacing:.04em;color:#EDEBE0;
-  background:linear-gradient(transparent,rgba(10,13,7,.85))}
+.gal figcaption{position:absolute;inset-inline:0;bottom:0;padding:30px 16px 13px;
+  font-size:13.5px;letter-spacing:.04em;color:#EFEDE4;
+  background:linear-gradient(transparent,rgba(9,12,6,.88))}
 .g-a{grid-column:span 4;aspect-ratio:16/9}
 .g-b{grid-column:span 2;aspect-ratio:4/5}
-.g-c{grid-column:span 2;aspect-ratio:4/3}
-.g-d{grid-column:span 2;aspect-ratio:4/3}
-.g-e{grid-column:span 2;aspect-ratio:4/3}
+.g-c,.g-d,.g-e{grid-column:span 2;aspect-ratio:4/3}
 .g-f{grid-column:span 6;aspect-ratio:21/8}
 @media (max-width:820px){
   .gal{grid-template-columns:repeat(2,1fr)}
@@ -206,15 +230,15 @@ section{padding-block:clamp(64px,8.5vw,116px)}
 
 /* ---------- contact ---------- */
 .contact{background:var(--ink-2)}
-.big-num{display:inline-flex;align-items:baseline;gap:14px;margin-top:clamp(20px,2.6vw,30px);
-  font-family:'Secular One',sans-serif;font-size:clamp(34px,6vw,74px);color:#fff;
-  letter-spacing:.01em;transition:color .2s}
+.big-num{display:inline-flex;align-items:baseline;gap:14px;
+  margin-top:clamp(18px,2.3vw,28px);font-family:'Secular One',sans-serif;
+  font-size:clamp(34px,6vw,74px);color:#fff;letter-spacing:.01em;transition:color .2s}
 .big-num:hover{color:var(--bronze-2)}
 .big-num small{font-family:'Assistant',sans-serif;font-size:13px;font-weight:600;
   letter-spacing:.26em;color:var(--bronze)}
-.chans{display:grid;gap:1px;background:var(--line-2);margin-top:clamp(26px,3.4vw,40px);
+.chans{display:grid;gap:1px;background:var(--line-2);margin-top:clamp(24px,3.1vw,38px);
   grid-template-columns:repeat(auto-fit,minmax(230px,1fr))}
-.chan{background:var(--ink);padding:20px 20px;display:flex;align-items:center;gap:14px;
+.chan{background:var(--ink);padding:20px;display:flex;align-items:center;gap:14px;
   transition:background .22s}
 .chan:hover{background:var(--ink-3)}
 .chan svg{width:21px;height:21px;color:var(--bronze);flex:none}
@@ -222,16 +246,15 @@ section{padding-block:clamp(64px,8.5vw,116px)}
 .chan .k{font-size:11px;letter-spacing:.2em;color:var(--mute-2);font-weight:600}
 .chan .v{font-weight:600;font-size:15.5px;overflow-wrap:anywhere;color:var(--cream)}
 
-/* ---------- footer ---------- */
-footer{border-top:1px solid var(--line-2);padding-block:36px 44px}
-.foot-in{display:flex;flex-wrap:wrap;gap:18px 28px;justify-content:space-between;align-items:center}
+footer{border-top:1px solid var(--line-2);padding-block:34px 42px}
+.foot-in{display:flex;flex-wrap:wrap;gap:18px 28px;justify-content:space-between;
+  align-items:center}
 .foot-in img{height:54px;width:auto}
 .foot-in .fx{color:var(--mute-2);font-size:14px}
-.note{color:#5F6455;font-size:12.5px;margin-top:20px;max-width:56rem;line-height:1.6}
+.note{color:#5E6353;font-size:12.5px;margin-top:18px;max-width:56rem;line-height:1.6}
 
-/* ---------- mobile action bar ---------- */
-.bar{position:fixed;inset-inline:0;bottom:0;z-index:70;display:none;
-  background:rgba(14,18,9,.94);backdrop-filter:blur(14px);border-top:1px solid var(--line);
+.bar{position:fixed;inset-inline:0;bottom:0;z-index:95;display:none;
+  background:rgba(13,17,10,.95);backdrop-filter:blur(14px);border-top:1px solid var(--line);
   padding:10px 12px calc(10px + env(safe-area-inset-bottom))}
 .bar .in{display:flex;gap:9px}
 .bar a{flex:1;justify-content:center;padding:13px 8px;font-size:15px}
@@ -240,8 +263,9 @@ footer{border-top:1px solid var(--line-2);padding-block:36px 44px}
   body{padding-bottom:80px}
   .facts{grid-template-columns:repeat(2,1fr)}
   .facts div:nth-child(3){border-inline-start:0}
-  .spec .row{grid-template-columns:1fr}
-  .spec .row span{margin-top:1px}
+  .spec .row{grid-template-columns:auto 1fr;row-gap:2px}
+  .spec .row span{grid-column:2}
+  .film-note{justify-content:flex-start}
 }
 </style>
 </head>
@@ -249,10 +273,11 @@ footer{border-top:1px solid var(--line-2);padding-block:36px 44px}
 
 <header class="top">
   <div class="wrap top-in">
-    <a href="./" aria-label="מתחם הסופרים · פוקוס נדל״ן"><img class="mark" src="assets/logo_rev.png" alt="פוקוס נדל&quot;ן — Focused Realty"></a>
+    <a href="./" aria-label="מתחם הסופרים · פוקוס נדל״ן"><img class="mark" src="assets/logo_rev.png" width="1710" height="981" alt="פוקוס נדל&quot;ן — Focused Realty"></a>
     <nav class="nav">
-      <a href="en.html">English</a>
-      <a class="solid-cta" href="https://wa.me/972534188991" target="_blank" rel="noopener">וואטסאפ</a>
+      <span class="jump"><a href="#film">הסרטון</a><a href="#why">למה כאן</a><a href="#mix">הנכסים</a><a href="#contact">צור קשר</a></span>
+      <a class="pill" href="en.html">English</a>
+      <a class="pill solid-cta" href="https://wa.me/972534188991" target="_blank" rel="noopener">וואטסאפ</a>
     </nav>
   </div>
 </header>
@@ -271,7 +296,7 @@ footer{border-top:1px solid var(--line-2);padding-block:36px 44px}
   </div>
 </div>
 
-<section>
+<section id="film">
   <div class="wrap">
     <div class="kicker rv">הסרטון</div>
     <h2 class="sec-h rv">90 שניות במתחם</h2>
@@ -286,45 +311,47 @@ footer{border-top:1px solid var(--line-2);padding-block:36px 44px}
   </div>
 </section>
 
-<div class="say">
-  <div class="say-img" style="background-image:url(assets/band.jpg)"></div>
-  <div class="wrap">
-    <div class="kicker rv">למה אנחנו</div>
-    <h2 class="rv">מתחם הסופרים<em>זה פוקוס נדל״ן</em></h2>
-    <p class="rv">אנחנו לא משרד שמוכר בכל הארץ. אנחנו עובדים במתחם הזה, ורק בו — ומכירים כל בניין, כל קומה וכל מה שזז. זה ההבדל בין לחפש נכס לבין לדעת איפה הוא.</p>
+<div class="say" id="why-us">
+  <div class="wrap say-in">
+    <figure class="rv"><img src="assets/sign.jpg" alt="שלט למכירה של פוקוס נדל"ן על מרפסת במתחם" width="1000" height="1080" loading="lazy" decoding="async"></figure>
+    <div>
+      <div class="kicker rv">למה אנחנו</div>
+      <h2 class="rv">מתחם הסופרים<em>זה פוקוס נדל״ן</em></h2>
+      <p class="rv">אנחנו לא משרד שמוכר בכל הארץ. אנחנו עובדים במתחם הזה, ורק בו — ומכירים כל בניין, כל קומה וכל מה שזז. זה ההבדל בין לחפש נכס לבין לדעת איפה הוא.</p>
+    </div>
   </div>
 </div>
 
-<section>
+<section id="why" class="ruled">
   <div class="wrap split">
     <div>
       <div class="kicker rv">למה כאן</div>
       <h2 class="sec-h rv">ארבעה דברים שמזיזים את המחט</h2>
       <div class="reasons"><div class="reason rv"><h3>פוטנציאל השבחה</h3><p>אפשרויות רכישה במחירים אטרקטיביים ביחס לפוטנציאל האזור, לצד המשך התפתחות המתחם והשבחת הנכסים לאורך זמן.</p></div><div class="reason rv"><h3>מיקום שמחבר לכול</h3><p>נגישות מהירה לבורסת היהלומים ברמת גן, לקריית ההייטק בפתח תקווה ולמרכזי העסקים של תל אביב — לצד עורקי תחבורה ותחנות הרכבת הקלה.</p></div><div class="reason rv"><h3>טבע ופארק</h3><p>קרבה לנחל הירקון ולפארק רחב־היקף בשלבי פיתוח מתקדמים — סביבת מגורים שמשלבת ירוק ונגישות עירונית.</p></div><div class="reason rv"><h3>סטנדרט מגורים גבוה</h3><p>תכנון אדריכלי מוקפד, מפרט איכותי ורמת גימור גבוהה, עם דגש על נוחות, פונקציונליות ועיצוב.</p></div></div>
     </div>
-    <figure class="rv"><img src="assets/tall.jpg" alt="מתחם הסופרים" loading="lazy" decoding="async"></figure>
+    <figure class="rv"><img src="assets/tall.jpg" alt="מתחם הסופרים" width="1000" height="1806" loading="lazy" decoding="async"></figure>
   </div>
 </section>
 
-<section class="band-2">
+<section class="band-2" id="mix">
   <div class="wrap">
     <div class="kicker rv">תמהיל הנכסים</div>
     <h2 class="sec-h rv">מה יש כאן</h2>
     <div class="mix"><div class="tile rv"><h3>3, 4 ו־5 חדרים</h3><p>דירות בטווח רחב, למשקיעים ולמשפחות.</p></div><div class="tile rv"><h3>דירות גן</h3><p>יחידות עם חצר פרטית בקומת הקרקע.</p></div><div class="tile rv"><h3>פנטהאוזים</h3><p>נכסי יוקרה בקומות העליונות.</p></div><div class="tile rv"><h3>קבוצת רכישה</h3><p>קבוצה ייעודית לפנטהאוזים בתנאי רכישה אטרקטיביים.</p></div></div>
     <div class="kicker rv" style="margin-top:clamp(44px,5vw,68px)">במרחק נסיעה</div>
-    <div class="spec"><div class="row rv"><b>בורסת היהלומים</b><span>רמת גן</span></div><div class="row rv"><b>קריית ההייטק</b><span>פתח תקווה</span></div><div class="row rv"><b>מרכזי העסקים</b><span>תל אביב</span></div><div class="row rv"><b>הרכבת הקלה</b><span>תחנות באזור</span></div></div>
+    <div class="spec"><div class="row rv"><i></i><b>בורסת היהלומים</b><span>רמת גן</span></div><div class="row rv"><i></i><b>קריית ההייטק</b><span>פתח תקווה</span></div><div class="row rv"><i></i><b>מרכזי העסקים</b><span>תל אביב</span></div><div class="row rv"><i></i><b>הרכבת הקלה</b><span>תחנות באזור</span></div></div>
   </div>
 </section>
 
-<section>
+<section id="gallery" class="ruled">
   <div class="wrap">
     <div class="kicker rv">מהשטח</div>
     <h2 class="sec-h rv">השכונה, כמו שהיא</h2>
-    <div class="gal"><figure class="g-a rv"><img src="assets/arcade.jpg" alt="מתחם הסופרים — הרחוב המסחרי" loading="lazy" decoding="async"><figcaption>הרחוב המסחרי</figcaption></figure><figure class="g-b rv"><img src="assets/park.jpg" alt="מתחם הסופרים — קו ראשון לפארק" loading="lazy" decoding="async"><figcaption>קו ראשון לפארק</figcaption></figure><figure class="g-c rv"><img src="assets/view.jpg" alt="מתחם הסופרים — מבט מהמרפסת" loading="lazy" decoding="async"><figcaption>מבט מהמרפסת</figcaption></figure><figure class="g-d rv"><img src="assets/interior.jpg" alt="מתחם הסופרים — דירה מוגמרת" loading="lazy" decoding="async"><figcaption>דירה מוגמרת</figcaption></figure><figure class="g-e rv sheet"><img src="assets/plan.jpg" alt="מתחם הסופרים — תוכנית דירת 5 חדרים" loading="lazy" decoding="async"><figcaption>תוכנית דירת 5 חדרים</figcaption></figure><figure class="g-f rv"><img src="assets/boulevard.jpg" alt="מתחם הסופרים — אדריכלות ומרחב" loading="lazy" decoding="async"><figcaption>אדריכלות ומרחב</figcaption></figure></div>
+    <div class="gal"><figure class="g-a rv"><img src="assets/arcade.jpg" alt="מתחם הסופרים — הרחוב המסחרי" width="1200" height="800" loading="lazy" decoding="async"><figcaption>הרחוב המסחרי</figcaption></figure><figure class="g-b rv"><img src="assets/park.jpg" alt="מתחם הסופרים — קו ראשון לפארק" width="1200" height="800" loading="lazy" decoding="async"><figcaption>קו ראשון לפארק</figcaption></figure><figure class="g-c rv"><img src="assets/view.jpg" alt="מתחם הסופרים — מבט מהמרפסת" width="1200" height="800" loading="lazy" decoding="async"><figcaption>מבט מהמרפסת</figcaption></figure><figure class="g-d rv"><img src="assets/interior.jpg" alt="מתחם הסופרים — דירה מוגמרת" width="1200" height="800" loading="lazy" decoding="async"><figcaption>דירה מוגמרת</figcaption></figure><figure class="g-e rv sheet"><img src="assets/plan.jpg" alt="מתחם הסופרים — תוכנית דירת 5 חדרים" width="1200" height="800" loading="lazy" decoding="async"><figcaption>תוכנית דירת 5 חדרים</figcaption></figure><figure class="g-f rv"><img src="assets/boulevard.jpg" alt="מתחם הסופרים — אדריכלות ומרחב" width="1200" height="800" loading="lazy" decoding="async"><figcaption>אדריכלות ומרחב</figcaption></figure></div>
   </div>
 </section>
 
-<section class="contact">
+<section class="contact" id="contact">
   <div class="wrap">
     <div class="kicker rv">דברו איתנו</div>
     <h2 class="sec-h rv">לפרטים ולתיאום סיור</h2>
@@ -338,7 +365,7 @@ footer{border-top:1px solid var(--line-2);padding-block:36px 44px}
 <footer>
   <div class="wrap">
     <div class="foot-in">
-      <img src="assets/logo_rev.png" alt="">
+      <img src="assets/logo_rev.png" alt="" width="1710" height="981">
       <div class="fx">פוקוס נדל״ן · מתחם הסופרים, בני ברק</div>
     </div>
     <p class="note">התמונות והסרטון צולמו במתחם. אין באמור משום התחייבות; פרטי הנכסים והזמינות מתעדכנים מול המשרד.</p>
@@ -369,7 +396,7 @@ footer{border-top:1px solid var(--line-2);padding-block:36px 44px}
     entries.forEach(function(en){
       if (en.isIntersecting){ en.target.classList.add('in'); io.unobserve(en.target); }
     });
-  }, {rootMargin:'0px 0px -12% 0px', threshold:0.06});
+  }, {rootMargin:'0px 0px -10% 0px', threshold:0.05});
   els.forEach(function(e){ io.observe(e); });
 })();
 </script>
