@@ -163,6 +163,9 @@ section{padding-block:clamp(56px,7.4vw,98px)}
    never see a second toggle. It stops short of the control strip, generously,
    because that strip's height differs between browsers. */
 .film .play{position:absolute;inset:0 0 max(58px,13%) 0;display:grid;place-items:center;
+  /* the ring is drawn outside the button and .film clips it, so put the
+     ring on the inner circle where there is room for it */
+  outline:none;
   border:0;padding:0;cursor:pointer;color:var(--cream);
   background:linear-gradient(rgba(13,17,10,.10),rgba(13,17,10,.34));
   transition:opacity .3s ease,background .3s ease}
@@ -171,9 +174,10 @@ section{padding-block:clamp(56px,7.4vw,98px)}
   box-shadow:0 14px 44px -12px rgba(0,0,0,.85);
   transition:transform .25s cubic-bezier(.2,.7,.3,1),background .25s}
 .film .play svg{width:36%;height:36%;fill:#14180D;display:block}
-.film .play .ic-play{margin-inline-start:9%}
+.film .play .ic-play{margin-left:9%}   /* optical centring, not direction-dependent */
 .film .play .ic-pause{display:none;margin:0}
 .film .play:hover i,.film .play:focus-visible i{transform:scale(1.08);background:var(--bronze-2)}
+.film .play:focus-visible i{box-shadow:0 0 0 3px var(--ink),0 0 0 6px var(--bronze-2)}
 /* while it plays the surface goes invisible but stays clickable - click to pause */
 .film.playing .play{opacity:0;background:transparent}
 .film.playing .play:hover,.film.playing .play:focus-visible{opacity:1}
@@ -346,7 +350,7 @@ footer{border-top:1px solid var(--line-2);padding-block:34px 42px}
     <h2 class="sec-h rv">90 segundos en el complejo</h2>
     <p class="sec-p rv">Un recorrido breve por el barrio, las viviendas y todo lo que hace de esto una oportunidad.</p>
     <div class="film rv">
-      <video controls preload="none" playsinline poster="assets/poster-m.jpg">
+      <video controls preload="none" playsinline poster="assets/poster-m.jpg" aria-label="Complejo Sofrim, Bnei Brak — vídeo de presentación">
         <source src="assets/film-es.mp4" type="video/mp4">
       </video>
       <button class="play" type="button" aria-label="Reproducir el vídeo"
@@ -391,7 +395,7 @@ footer{border-top:1px solid var(--line-2);padding-block:34px 42px}
   <div class="wrap">
     <div class="kicker rv">Tipologías de vivienda</div>
     <h2 class="sec-h rv">Qué hay disponible</h2>
-    <div class="mix"><div class="tile rv"><h3>Pisos de 2, 3 y 4 dormitorios</h3><p>Un amplio abanico, para inversores y para familias. En Israel se anuncian como 3, 4 y 5 habitaciones: allí el salón cuenta como una más.</p></div><div class="tile rv"><h3>Bajos con jardín</h3><p>Planta baja con jardín privado de uso exclusivo.</p></div><div class="tile rv"><h3>Áticos</h3><p>Las viviendas más exclusivas de cada edificio, en la última planta.</p></div><div class="tile rv"><h3>Un trastero para cada vivienda</h3><p>Trastero en propiedad, incluido con la vivienda.</p></div></div>
+    <div class="mix"><div class="tile rv"><h3>Pisos de 2, 3 y 4 dormitorios</h3><p>Un amplio abanico, para inversores y para familias.</p></div><div class="tile rv"><h3>Bajos con jardín</h3><p>Planta baja con jardín privado de uso exclusivo.</p></div><div class="tile rv"><h3>Áticos</h3><p>Las viviendas más exclusivas de cada edificio, en la última planta.</p></div><div class="tile rv"><h3>Un trastero para cada vivienda</h3><p>Trastero en propiedad, incluido con la vivienda.</p></div></div>
     <div class="kicker rv" style="margin-top:clamp(44px,5vw,68px)">A pocos minutos en coche</div>
     <div class="spec"><div class="row rv"><i></i><b>Bolsa de Diamantes</b><span>Ramat Gan</span></div><div class="row rv"><i></i><b>Las torres de oficinas B.S.R</b><span>A pocos minutos</span></div><div class="row rv"><i></i><b>Distrito tecnológico</b><span>Petah Tikva</span></div><div class="row rv"><i></i><b>Centros de negocios</b><span>Tel Aviv</span></div><div class="row rv"><i></i><b>Metro ligero</b><span>Paradas en la zona</span></div></div>
   </div>
@@ -424,11 +428,11 @@ footer{border-top:1px solid var(--line-2);padding-block:34px 42px}
       <img src="assets/logo_rev-s.png" alt="" width="400" height="229">
       <div class="fx">Focused Realty · Complejo Sofrim, Bnei Brak</div>
     </div>
-    <p class="note">Documento informativo sin valor contractual. Las fotografías y el vídeo se han realizado en el propio complejo; el plano es orientativo. Nada de lo aquí expuesto constituye oferta ni compromiso alguno, y no supone asesoramiento de inversión ni garantía de rentabilidad. El parque, el paseo y el club deportivo están en desarrollo o en proyecto. Los datos y la disponibilidad de cada vivienda están sujetos a cambios y deben confirmarse con la oficina.</p>
+    <p class="note">En Israel las viviendas se anuncian por estancias y el salón cuenta como una más, así que lo que allí es un piso de 5 son 4 dormitorios. Documento informativo sin valor contractual. Las fotografías y el vídeo se han realizado en el propio complejo; el plano es orientativo. Nada de lo aquí expuesto constituye oferta ni compromiso alguno, y no supone asesoramiento de inversión ni garantía de rentabilidad. El parque, el paseo y el club deportivo están en desarrollo o en proyecto. Los datos y la disponibilidad de cada vivienda están sujetos a cambios y deben confirmarse con la oficina.</p>
   </div>
 </footer>
 
-<div class="bar"><div class="in">
+<div class="bar" role="region" aria-label="Hablemos"><div class="in">
   <a class="btn btn-a" href="https://wa.me/972534188991" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3.2 20.8l1.4-4.4A8.3 8.3 0 1 1 7.9 19.4z"/><path d="M8.6 9.2c.3 2.6 3.6 5.9 6.2 6.2.6.1 1.4-.5 1.5-1.1l.1-.7-2-1-.9 1c-1.2-.5-2.6-1.9-3.1-3.1l1-.9-1-2-.7.1c-.6.1-1.2.9-1.1 1.5z" fill="currentColor" stroke="none"/></svg>WhatsApp</a>
   <a class="btn btn-b" href="tel:+97236333252"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6.4 3.5h3l1.5 3.8-2 1.3a12 12 0 0 0 6.5 6.5l1.3-2 3.8 1.5v3a2 2 0 0 1-2.2 2A16.8 16.8 0 0 1 4.4 5.7a2 2 0 0 1 2-2.2z"/></svg>Llámenos</a>
 </div></div>
