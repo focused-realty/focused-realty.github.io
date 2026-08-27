@@ -169,7 +169,7 @@ section{padding-block:clamp(56px,7.4vw,98px)}
   border:0;padding:0;cursor:pointer;color:var(--cream);
   background:linear-gradient(rgba(13,17,10,.10),rgba(13,17,10,.34));
   transition:opacity .3s ease,background .3s ease}
-.film .play i{width:clamp(62px,6.4vw,86px);aspect-ratio:1;border-radius:50%;
+.film .play i{position:relative;width:clamp(62px,6.4vw,86px);aspect-ratio:1;border-radius:50%;
   display:grid;place-items:center;background:rgba(200,153,107,.95);
   box-shadow:0 14px 44px -12px rgba(0,0,0,.85);
   transition:transform .25s cubic-bezier(.2,.7,.3,1),background .25s}
@@ -183,7 +183,14 @@ section{padding-block:clamp(56px,7.4vw,98px)}
 .film.playing .play:hover,.film.playing .play:focus-visible{opacity:1}
 .film.playing .ic-play{display:none}
 .film.playing .ic-pause{display:block}
+.film.buffering .play{opacity:1}
+.film.buffering .play i{background:rgba(200,153,107,.55)}
+.film.buffering .play i::after{content:"";position:absolute;inset:-9px;border-radius:50%;
+  border:3px solid rgba(243,241,232,.22);border-top-color:var(--cream);animation:spin 1s linear infinite}
+.film.buffering .play svg{opacity:.35}
+@keyframes spin{to{transform:rotate(360deg)}}
 @media (prefers-reduced-motion:reduce){.film .play,.film .play i{transition:none}}
+@media (prefers-reduced-motion:reduce){.film.buffering .play i::after{animation:none}}
 .film-note{margin-top:13px;max-width:1020px;font-size:13.5px;color:var(--mute-2);
   display:flex;gap:8px 18px;align-items:center;flex-wrap:wrap;
   justify-content:space-between}
@@ -483,6 +490,38 @@ footer{border-top:1px solid var(--line-2);padding-block:34px 42px}
     });
   }, {rootMargin:'0px 0px -10% 0px', threshold:0.05});
   els.forEach(function(e){ io.observe(e); });
+
+  // Start fetching the film before anyone asks for it.
+  //
+  // GitHub Pages serves a cold file from origin very slowly - measured at
+  // 12 KB/s on a first hit, which meant 85 seconds of frozen poster after the
+  // visitor pressed play. preload="none" keeps the page load light but defers
+  // that whole fetch to the click. Warming it as the section comes near means
+  // the slow part happens while they are still reading, and the click is
+  // instant. Once the file is at the edge cache everyone after them is fast.
+  var film = document.querySelector('.film');
+  if (film && 'IntersectionObserver' in window) {
+    var warm = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (!en.isIntersecting) return;
+        var v = en.target.querySelector('video');
+        if (v && v.preload !== 'auto') { v.preload = 'auto'; v.load(); }
+        warm.unobserve(en.target);
+      });
+    }, {rootMargin: '500px 0px'});
+    warm.observe(film);
+  }
+
+  // A slow start should read as loading, not as broken.
+  var fv = film && film.querySelector('video');
+  if (fv) {
+    ['waiting', 'stalled'].forEach(function (n) {
+      fv.addEventListener(n, function () { film.classList.add('buffering'); });
+    });
+    ['playing', 'canplay', 'pause'].forEach(function (n) {
+      fv.addEventListener(n, function () { film.classList.remove('buffering'); });
+    });
+  }
 })();
 </script>
 
