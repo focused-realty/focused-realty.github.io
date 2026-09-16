@@ -160,7 +160,10 @@ section{padding-block:clamp(56px,7.4vw,98px)}
   background:#000;overflow:hidden;max-width:1020px;position:relative;
   container-type:inline-size;
   box-shadow:0 34px 80px -40px rgba(0,0,0,.9);
-  -webkit-tap-highlight-color:transparent}
+  -webkit-tap-highlight-color:transparent;
+  /* play, pause, play is three quick taps; without this Safari reads two of
+     them as a double tap and zooms the page instead */
+  touch-action:manipulation}
 .film video{width:100%;height:auto;aspect-ratio:16/9;background:#000;display:block}
 /* a phone gives up 40px of picture to the page gutter for no reason */
 @media (max-width:640px){
@@ -196,6 +199,7 @@ section{padding-block:clamp(56px,7.4vw,98px)}
    absent until asked for: the film is what the visitor came to see */
 .film .vp-ui{position:absolute;inset-inline:0;bottom:0;z-index:5;direction:ltr;
   display:flex;flex-wrap:wrap;align-items:center;gap:0;
+  user-select:none;-webkit-user-select:none;
   padding:14px 6px 3px;opacity:0;pointer-events:none;
   transition:opacity .22s ease;
   background:linear-gradient(transparent,rgba(5,8,3,.74))}
