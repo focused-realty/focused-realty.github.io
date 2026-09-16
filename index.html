@@ -660,7 +660,11 @@ document.querySelectorAll('.film').forEach(function (f) {
 
   function focused() {
     var a = document.activeElement;
-    return !!(a && a !== document.body && a !== f && f.contains(a));
+    if (!a || a === document.body || a === f || !f.contains(a)) { return false; }
+    // Only a keyboard user's focus holds the strip open. A mouse click leaves
+    // focus sitting on the button it pressed, and counting that as "wanted" is
+    // what kept the strip on screen for good the moment anyone pressed play.
+    try { return a.matches(':focus-visible'); } catch (e) { return true; }
   }
   function wanted() {
     if (f.classList.contains('vp-fresh')) { return false; }
@@ -728,7 +732,12 @@ document.querySelectorAll('.film').forEach(function (f) {
   v.addEventListener('progress', paint);
   v.addEventListener('timeupdate', paint);
 
-  big.addEventListener('click', toggle);
+  big.addEventListener('click', function () {
+    toggle();
+    // this button is about to fade out; do not leave a mouse user's focus
+    // on something they can no longer see
+    try { if (!big.matches(':focus-visible')) { big.blur(); } } catch (e) {}
+  });
   bPlay.addEventListener('click', toggle);
   // on a touch screen there is no hover to bring the controls back with, so the
   // first tap reveals them instead of pausing the film under the viewer
