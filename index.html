@@ -277,8 +277,11 @@ section{padding-block:clamp(56px,7.4vw,98px)}
   .film .vp-t .vp-sep,.film .vp-t .vp-dur{display:none}
 }
 
+/* margin:0 is what the browser's own full-screen sheet does, and the strip
+   hangs 35px off the bottom edge without it. Stated here rather than relied on. */
 .film:fullscreen,.film:-webkit-full-screen{max-width:none;width:100%;height:100%;
-  border:0;transform:none;display:flex;align-items:center;justify-content:center}
+  margin:0;border:0;transform:none;display:flex;align-items:center;
+  justify-content:center}
 .film:fullscreen video,.film:-webkit-full-screen video{width:100%;height:100%;
   aspect-ratio:auto;object-fit:contain}
 .film:fullscreen .vp-ui,.film:-webkit-full-screen .vp-ui{padding:30px 18px 12px}
