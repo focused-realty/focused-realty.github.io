@@ -819,21 +819,63 @@ document.querySelectorAll('.film').forEach(function (f) {
     warm();
   }
 
-  // Two stalls mean the line cannot carry this copy. Drop to the light one and
-  // put the viewer back where they were - a softer picture beats a stutter.
-  var stalls = 0, dropped = false;
-  v.addEventListener('waiting', function () {
-    if (dropped || !D.light || v.seeking || v.paused) { return; }
-    if (++stalls < 2) { return; }
+  /* ---- when the line cannot carry the full copy ----
+     A cold file on GitHub Pages was measured at 17 seconds to first frame, so
+     the light copy is not a luxury. Three ways in: a line that declares itself
+     slow, a start that has not produced a picture in seven seconds, and two
+     stalls during playback. */
+  var light = D.light || '';
+  var full = (v.querySelector('source') || {}).src || '';
+  var dropped = false, stalls = 0, slowT = 0;
+
+  function goLight() {
+    if (dropped || !light) { return; }
     dropped = true;
-    var t = v.currentTime;
-    v.src = D.light;
+    clearTimeout(slowT);
+    var t = v.currentTime, wasPlaying = !v.paused;
+    v.src = light;
     v.load();
     v.addEventListener('loadedmetadata', function () {
       if (t) { v.currentTime = t; }
-      var p = v.play();
-      if (p && p.catch) { p.catch(function () {}); }
+      if (wasPlaying) {
+        var p = v.play();
+        if (p && p.catch) { p.catch(function () {}); }
+      }
     }, {once: true});
+  }
+
+  var conn = navigator.connection || {};
+  if (light && (conn.saveData === true || /(^|-)2g$|^3g$/.test(conn.effectiveType || ''))) {
+    dropped = true;                       // already on it; nothing left to drop to
+    v.src = light;
+  }
+
+  v.addEventListener('play', function () {
+    clearTimeout(slowT);
+    if (dropped || v.readyState >= 3) { return; }
+    slowT = setTimeout(function () {
+      // only if it is still nowhere near ready - almost-there deserves patience
+      var got = v.buffered.length ? v.buffered.end(v.buffered.length - 1) : 0;
+      if (v.readyState < 3 && got < 3 && !v.paused) { goLight(); }
+    }, 7000);
+  });
+  ['playing', 'canplaythrough', 'pause'].forEach(function (n) {
+    v.addEventListener(n, function () { clearTimeout(slowT); });
+  });
+  v.addEventListener('waiting', function () {
+    if (dropped || v.seeking || v.paused) { return; }
+    if (++stalls >= 2) { goLight(); }
+  });
+  // if the light copy is the one that fails, go back to what was working
+  v.addEventListener('error', function () {
+    if (dropped && full && v.currentSrc && v.currentSrc !== full) {
+      var t = v.currentTime;
+      v.src = full;
+      v.load();
+      v.addEventListener('loadedmetadata', function () {
+        if (t) { v.currentTime = t; }
+      }, {once: true});
+    }
   });
 
   sync();
