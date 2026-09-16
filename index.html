@@ -216,14 +216,6 @@ section{padding-block:clamp(56px,7.4vw,98px)}
   .film .vp-gap{display:block;flex:1 1 auto}
   .film .vp-ui{padding:22px 8px 4px}
 }
-/* on a small picture the scrub bar is worth more than the mute button - a
-   phone has hardware keys for that anyway */
-@container (max-width:360px){
-  .film .vp-volw{display:none}
-}
-@container (max-width:310px){
-  .film .vp-t .vp-sep,.film .vp-t .vp-dur{display:none}
-}
 
 .film .vp-seek{position:relative;height:26px;cursor:pointer;touch-action:none;
   outline:none;-webkit-tap-highlight-color:transparent}
@@ -274,6 +266,15 @@ section{padding-block:clamp(56px,7.4vw,98px)}
   accent-color:var(--bronze)}
 @media (hover:hover) and (pointer:fine){
   .film .vp-volw:hover .vp-vol,.film .vp-volw:focus-within .vp-vol{width:84px}
+}
+
+/* on a small picture the scrub bar is worth more than the mute button - a
+   phone has hardware keys for that anyway */
+@container (max-width:360px){
+  .film .vp-volw{display:none}
+}
+@container (max-width:310px){
+  .film .vp-t .vp-sep,.film .vp-t .vp-dur{display:none}
 }
 
 .film:fullscreen,.film:-webkit-full-screen{max-width:none;width:100%;height:100%;
