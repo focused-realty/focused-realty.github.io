@@ -154,49 +154,127 @@ section{padding-block:clamp(56px,7.4vw,98px)}
 .sec-p{color:var(--mute);max-width:38rem;margin-top:13px;font-size:17.5px}
 .band-2{background:var(--ink-2)}
 
+
 /* ---------- film ---------- */
 .film{margin-top:clamp(24px,3.2vw,38px);border:1px solid var(--line);
   background:#000;overflow:hidden;max-width:1020px;position:relative;
-  box-shadow:0 34px 80px -40px rgba(0,0,0,.9)}
-.film video{width:100%;height:auto;aspect-ratio:16/9;background:#000;cursor:pointer}
-/* One surface owns every click on the picture, so the browser's own controls
-   never see a second toggle. It stops short of the control strip, generously,
-   because that strip's height differs between browsers. */
-.film .play{position:absolute;inset:0 0 max(58px,13%) 0;display:grid;place-items:center;
-  /* the ring is drawn outside the button and .film clips it, so put the
-     ring on the inner circle where there is room for it */
-  outline:none;
-  border:0;padding:0;cursor:pointer;color:var(--cream);
-  background:linear-gradient(rgba(13,17,10,.10),rgba(13,17,10,.34));
-  transition:opacity .3s ease,background .3s ease}
-.film .play i{position:relative;width:clamp(62px,6.4vw,86px);aspect-ratio:1;border-radius:50%;
-  display:grid;place-items:center;background:rgba(200,153,107,.95);
+  box-shadow:0 34px 80px -40px rgba(0,0,0,.9);
+  -webkit-tap-highlight-color:transparent}
+.film video{width:100%;height:auto;aspect-ratio:16/9;background:#000;display:block}
+/* a phone gives up 40px of picture to the page gutter for no reason */
+@media (max-width:640px){
+  .film{margin-inline:calc(var(--pad) * -1);border-inline:0}
+  .film-note{padding-inline:0}
+}
+
+/* the opening button, over the poster */
+.film .vp-big{position:absolute;inset:0;z-index:3;display:grid;place-items:center;
+  border:0;padding:0;margin:0;cursor:pointer;color:inherit;
+  background:linear-gradient(rgba(13,17,10,.12),rgba(13,17,10,.40));
+  transition:opacity .28s ease}
+.film .vp-big .ring{text-decoration:none;width:clamp(56px,11%,84px);aspect-ratio:1;
+  border-radius:50%;display:grid;place-items:center;background:rgba(200,153,107,.95);
   box-shadow:0 14px 44px -12px rgba(0,0,0,.85);
   transition:transform .25s cubic-bezier(.2,.7,.3,1),background .25s}
-.film .play svg{width:36%;height:36%;fill:#14180D;display:block}
-.film .play .ic-play{margin-left:9%}   /* optical centring, not direction-dependent */
-.film .play .ic-pause{display:none;margin:0}
-.film .play:hover i,.film .play:focus-visible i{transform:scale(1.08);background:var(--bronze-2)}
-.film .play:focus-visible i{box-shadow:0 0 0 3px var(--ink),0 0 0 6px var(--bronze-2)}
-/* while it plays the surface goes invisible but stays clickable - click to pause */
-.film.playing .play{opacity:0;background:transparent}
-.film.playing .play:hover,.film.playing .play:focus-visible{opacity:1}
-.film.playing .ic-play{display:none}
-.film.playing .ic-pause{display:block}
-.film.buffering .play{opacity:1}
-.film.buffering .play i{background:rgba(200,153,107,.55)}
-.film.buffering .play i::after{content:"";position:absolute;inset:-9px;border-radius:50%;
-  border:3px solid rgba(243,241,232,.22);border-top-color:var(--cream);animation:spin 1s linear infinite}
-.film.buffering .play svg{opacity:.35}
+.film .vp-big svg{width:38%;height:38%;fill:#14180D;display:block;margin-left:8%}
+.film .vp-big .ic-replay{margin-left:0}
+.film .vp-big:hover .ring{transform:scale(1.07);background:var(--bronze-2)}
+.film .vp-big:focus-visible .ring{box-shadow:0 0 0 3px #000,0 0 0 6px var(--bronze-2)}
+.film.vp-on .vp-big{opacity:0;pointer-events:none}
+.film .vp-big .ic-replay,.film.vp-end .vp-big .ic-play{display:none}
+.film.vp-end .vp-big .ic-replay{display:block}
+
+/* loading. never a plate over the picture - a ring, and only when truly waiting */
+.film .vp-spin{position:absolute;left:50%;top:50%;width:54px;height:54px;
+  margin:-27px 0 0 -27px;z-index:4;pointer-events:none;border-radius:50%;
+  border:3px solid rgba(243,241,232,.24);border-top-color:var(--cream);
+  animation:spin .9s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
-@media (prefers-reduced-motion:reduce){.film .play,.film .play i{transition:none}}
-@media (prefers-reduced-motion:reduce){.film.buffering .play i::after{animation:none}}
+
+/* ---------- controls ---------- */
+.film .vp-ui{position:absolute;inset-inline:0;bottom:0;z-index:5;direction:ltr;
+  padding:30px 10px 6px;transition:opacity .25s ease,transform .25s ease;
+  background:linear-gradient(transparent,rgba(5,8,3,.55) 42%,rgba(5,8,3,.9))}
+.film.vp-idle .vp-ui{opacity:0;transform:translateY(8px);pointer-events:none}
+.film.vp-idle{cursor:none}
+
+.film .vp-seek{position:relative;height:28px;cursor:pointer;touch-action:none;
+  outline:none;-webkit-tap-highlight-color:transparent}
+.film .vp-seek b,.film .vp-seek .vp-buf,.film .vp-seek .vp-pos{position:absolute;
+  top:50%;height:4px;margin-top:-2px;border-radius:2px;left:0;
+  transition:height .15s ease,margin-top .15s ease}
+.film .vp-seek b{right:0;background:rgba(243,241,232,.24)}
+.film .vp-buf{width:0;background:rgba(243,241,232,.34)}
+.film .vp-pos{width:0;background:var(--bronze)}
+.film .vp-knob{position:absolute;top:50%;left:0;width:13px;height:13px;
+  margin:-6.5px 0 0 -6.5px;border-radius:50%;background:var(--bronze-2);
+  box-shadow:0 2px 9px rgba(0,0,0,.7);transform:scale(0);
+  transition:transform .16s ease;pointer-events:none}
+.film .vp-seek:hover b,.film .vp-seek:hover .vp-buf,.film .vp-seek:hover .vp-pos,
+.film.vp-drag .vp-seek b,.film.vp-drag .vp-buf,.film.vp-drag .vp-pos{height:6px;margin-top:-3px}
+.film .vp-seek:hover .vp-knob,.film .vp-seek:focus-visible .vp-knob,
+.film.vp-drag .vp-knob{transform:scale(1)}
+.film .vp-seek:focus-visible b{background:rgba(243,241,232,.5)}
+/* a finger needs a taller target and always wants to see where it is */
+@media (hover:none){
+  .film .vp-seek{height:36px}
+  .film .vp-knob{transform:scale(1)}
+  .film .vp-seek b,.film .vp-buf,.film .vp-pos{height:5px;margin-top:-2.5px}
+}
+
+.film .vp-row{display:flex;align-items:center;gap:2px}
+.film .vp-btn{width:42px;height:42px;flex:none;display:grid;place-items:center;
+  border:0;padding:0;background:none;color:var(--cream);cursor:pointer;
+  border-radius:2px;transition:color .18s;-webkit-tap-highlight-color:transparent}
+.film .vp-btn svg{width:22px;height:22px;fill:currentColor;display:block}
+.film .vp-btn:hover{color:var(--bronze-2)}
+.film .vp-btn:focus-visible{outline:2px solid var(--bronze-2);outline-offset:-3px}
+.film .vp-play .ic-pause,.film.vp-on .vp-play .ic-play{display:none}
+.film.vp-on .vp-play .ic-pause{display:block}
+.film .vp-mute .ic-off,.film.vp-muted .vp-mute .ic-on{display:none}
+.film.vp-muted .vp-mute .ic-off{display:block}
+.film .vp-full .ic-out,.film.vp-fs .vp-full .ic-in{display:none}
+.film.vp-fs .vp-full .ic-out{display:block}
+.film .vp-t{font-size:13px;font-variant-numeric:tabular-nums;color:#D6D3C6;
+  padding-inline:7px;white-space:nowrap;letter-spacing:.02em}
+.film .vp-t .vp-sep{color:#8E9380}
+.film .vp-gap{flex:1}
+/* the volume slider is a mouse affordance; a phone has hardware keys */
+.film .vp-volw{display:flex;align-items:center}
+.film .vp-vol{width:0;overflow:hidden;transition:width .22s ease}
+.film .vp-vol input{display:block;width:78px;margin:0 8px 0 2px;cursor:pointer;
+  accent-color:var(--bronze)}
+@media (hover:hover) and (pointer:fine){
+  .film .vp-volw:hover .vp-vol,.film .vp-volw:focus-within .vp-vol{width:88px}
+}
+/* on a 213px picture every pixel the strip takes is picture the viewer loses,
+   so the gradient ramp is shorter here - and the targets are a finger wide */
+@media (max-width:640px){
+  .film .vp-ui{padding:18px 6px 2px}
+  .film .vp-btn{width:44px;height:44px}
+  .film .vp-seek{height:32px}
+}
+@media (max-width:420px){.film .vp-t{font-size:12px;padding-inline:4px}}
+
+.film:fullscreen,.film:-webkit-full-screen{max-width:none;width:100%;height:100%;
+  border:0;transform:none;display:flex;align-items:center;justify-content:center}
+.film:fullscreen video,.film:-webkit-full-screen video{width:100%;height:100%;
+  aspect-ratio:auto;object-fit:contain}
+.film:fullscreen .vp-ui,.film:-webkit-full-screen .vp-ui{padding:34px 18px 12px}
+
+@media (prefers-reduced-motion:reduce){
+  .film .vp-big,.film .vp-big .ring,.film .vp-ui,.film .vp-knob,
+  .film .vp-seek b,.film .vp-buf,.film .vp-pos{transition:none}
+  .film .vp-spin{animation:none}
+}
+
 .film-note{margin-top:13px;max-width:1020px;font-size:13.5px;color:var(--mute-2);
   display:flex;gap:8px 18px;align-items:center;flex-wrap:wrap;
   justify-content:space-between}
 .film-note a{color:var(--bronze-2);border-bottom:1px solid rgba(200,153,107,.38);
   padding-bottom:1px;transition:color .2s,border-color .2s}
 .film-note a:hover{color:var(--bronze);border-color:var(--bronze)}
+
 
 /* ---------- statement: the sign is the proof, so show it clean ---------- */
 .say{background:var(--olive);position:relative;overflow:hidden;
@@ -356,17 +434,36 @@ footer{border-top:1px solid var(--line-2);padding-block:34px 42px}
     <div class="kicker rv">הסרטון</div>
     <h2 class="sec-h rv">90 שניות במתחם</h2>
     <p class="sec-p rv">סיור קצר בשכונה, בנכסים ובמה שהופך את המתחם להזדמנות.</p>
-    <div class="film rv">
-      <video controls preload="none" playsinline poster="assets/poster-m.jpg" aria-label="מתחם הסופרים, בני ברק — סרטון תדמית">
+    <div class="film rv" data-dur="92"
+         data-play="הפעלת הסרטון" data-pause="השהיית הסרטון"
+         data-replay="צפייה מחדש"
+         data-mute="השתקה" data-unmute="ביטול השתקה"
+         data-full="מסך מלא" data-unfull="יציאה ממסך מלא"
+         data-light="assets/film-he-360.mp4">
+      <video preload="none" playsinline poster="assets/poster-m.jpg" aria-label="מתחם הסופרים, בני ברק — סרטון תדמית">
         <source src="assets/film-he.mp4" type="video/mp4">
       </video>
-      <button class="play" type="button" aria-label="הפעלת הסרטון"
-              data-play="הפעלת הסרטון" data-pause="השהיית הסרטון">
-        <i>
-          <svg class="ic-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l13-7.5z"/></svg>
-          <svg class="ic-pause" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5h3.4v14H7zm6.6 0H17v14h-3.4z"/></svg>
-        </i>
+      <div class="vp-spin" hidden></div>
+      <button class="vp-big" type="button" aria-label="הפעלת הסרטון">
+        <span class="ring"><svg class="ic-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l13-7.5z"/></svg><svg class="ic-replay" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5V1L7 6l5 5V7a6 6 0 1 1-6 6H4a8 8 0 1 0 8-8z"/></svg></span>
       </button>
+      <div class="vp-ui">
+        <div class="vp-seek" role="slider" tabindex="0" aria-label="מיקום בסרטון"
+             aria-valuemin="0" aria-valuemax="92" aria-valuenow="0" aria-valuetext="0:00 / 1:32">
+          <b></b><i class="vp-buf"></i><i class="vp-pos"></i><i class="vp-knob"></i>
+        </div>
+        <div class="vp-row">
+          <button class="vp-btn vp-play" type="button" aria-label="הפעלת הסרטון"><svg class="ic-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l13-7.5z"/></svg><svg class="ic-pause" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5h3.4v14H7zm6.6 0H17v14h-3.4z"/></svg></button>
+          <span class="vp-t" aria-hidden="true"><span class="vp-now">0:00</span> <span class="vp-sep">/</span> <span class="vp-dur">1:32</span></span>
+          <span class="vp-gap"></span>
+          <span class="vp-volw">
+            <button class="vp-btn vp-mute" type="button" aria-label="השתקה"><svg class="ic-on" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3A4.5 4.5 0 0 0 14 7.97v8.05A4.5 4.5 0 0 0 16.5 12zM14 3.23v2.06a6.99 6.99 0 0 1 0 13.42v2.06a9 9 0 0 0 0-17.54z"/></svg><svg class="ic-off" viewBox="0 0 24 24" aria-hidden="true"><path d="M16.5 12A4.5 4.5 0 0 0 14 7.97v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51A8.9 8.9 0 0 0 21 12a9 9 0 0 0-7-8.77v2.06A7 7 0 0 1 19 12zM4.27 3 3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06a8.9 8.9 0 0 0 3.69-1.81L19.73 21 21 19.73 4.27 3zM12 4 9.91 6.09 12 8.18V4z"/></svg></button>
+            <span class="vp-vol"><input type="range" min="0" max="1" step="0.05" value="1"
+                   aria-label="עוצמת הקול"></span>
+          </span>
+          <button class="vp-btn vp-full" type="button" aria-label="מסך מלא"><svg class="ic-in" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/></svg><svg class="ic-out" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 16h3v3h2v-5H5v2zm3-8H5v2h5V5H8v3zm6 11h2v-3h3v-2h-5v5zm2-11V5h-2v5h5V8h-3z"/></svg></button>
+        </div>
+      </div>
     </div>
     <p class="film-note rv"><span>הסרטון נמשך 90 שניות.</span>
       <a href="assets/film-he-1080.mp4" download>הורדה באיכות מלאה · 1080p</a></p>
@@ -454,24 +551,294 @@ footer{border-top:1px solid var(--line-2);padding-block:34px 42px}
   onScroll();
   addEventListener('scroll', onScroll, {passive:true});
 
-  // click anywhere on the picture to play or pause
-  document.querySelectorAll('.film').forEach(function(f){
-    var v = f.querySelector('video'), btn = f.querySelector('.play');
-    if (!v || !btn) return;
-    var labelPlay = btn.getAttribute('data-play');
-    var labelPause = btn.getAttribute('data-pause');
-    function sync(){
-      var playing = !v.paused && !v.ended;
-      f.classList.toggle('playing', playing);
-      btn.setAttribute('aria-label', playing ? labelPause : labelPlay);
+
+document.querySelectorAll('.film').forEach(function (f) {
+  var v = f.querySelector('video');
+  if (!v) { return; }
+  var D     = f.dataset;
+  var big   = f.querySelector('.vp-big');
+  var spin  = f.querySelector('.vp-spin');
+  var seek  = f.querySelector('.vp-seek');
+  var buf   = f.querySelector('.vp-buf');
+  var pos   = f.querySelector('.vp-pos');
+  var knob  = f.querySelector('.vp-knob');
+  var bPlay = f.querySelector('.vp-play');
+  var bMute = f.querySelector('.vp-mute');
+  var bFull = f.querySelector('.vp-full');
+  var range = f.querySelector('.vp-vol input');
+  var tNow  = f.querySelector('.vp-now');
+  var tDur  = f.querySelector('.vp-dur');
+
+  function fmt(s) {
+    if (!isFinite(s) || s < 0) { s = 0; }
+    var m = Math.floor(s / 60), r = Math.floor(s % 60);
+    return m + ':' + (r < 10 ? '0' : '') + r;
+  }
+  // the declared length keeps the strip honest before metadata arrives
+  function dur() {
+    return (isFinite(v.duration) && v.duration > 0) ? v.duration : (+D.dur || 0);
+  }
+  function inBuffer(t) {
+    for (var i = 0; i < v.buffered.length; i++) {
+      if (t >= v.buffered.start(i) - 0.2 && t <= v.buffered.end(i)) { return true; }
     }
-    btn.addEventListener('click', function(){
-      if (v.paused) { var p = v.play(); if (p && p.catch) { p.catch(function(){}); } }
-      else { v.pause(); }
-    });
-    ['play','pause','ended'].forEach(function(n){ v.addEventListener(n, sync); });
-    sync();
+    return false;
+  }
+
+  /* ---- painting ---- */
+  var dragT = null, raf = 0;
+
+  function paint() {
+    var d = dur(), t = (dragT !== null) ? dragT : v.currentTime;
+    var p = d ? Math.max(0, Math.min(1, t / d)) : 0;
+    pos.style.width = (p * 100) + '%';
+    knob.style.left = (p * 100) + '%';
+    var end = 0;
+    for (var i = 0; i < v.buffered.length; i++) {
+      if (v.buffered.start(i) <= t + 0.25) { end = Math.max(end, v.buffered.end(i)); }
+    }
+    buf.style.width = d ? (Math.min(1, end / d) * 100) + '%' : '0';
+    tNow.textContent = fmt(t);
+    tDur.textContent = fmt(d);
+    seek.setAttribute('aria-valuenow', Math.round(t));
+    seek.setAttribute('aria-valuetext', fmt(t) + ' / ' + fmt(d));
+    // a spinner that outlives the wait is the bug being fixed; close that door
+    // on every painted frame, not only on an event that might never arrive
+    if (!spin.hidden && v.readyState >= 3 && !v.seeking) { busy(false); }
+  }
+  function tick() { paint(); raf = v.paused ? 0 : requestAnimationFrame(tick); }
+  function run()  { if (!raf) { raf = requestAnimationFrame(tick); } }
+
+  /* ---- loading state ---- */
+  var waitT = 0;
+  function busy(on) {
+    clearTimeout(waitT);
+    if (!on) { spin.hidden = true; return; }
+    // a hiccup shorter than this is not worth a spinner
+    waitT = setTimeout(function () {
+      if (v.readyState < 3 && (!v.paused || v.seeking)) { spin.hidden = false; }
+    }, 320);
+  }
+  ['waiting', 'stalled', 'seeking'].forEach(function (n) {
+    v.addEventListener(n, function () { busy(true); });
   });
+  ['playing', 'canplay', 'canplaythrough', 'seeked', 'pause', 'ended', 'error',
+   'abort', 'emptied'].forEach(function (n) {
+    v.addEventListener(n, function () { busy(false); });
+  });
+
+  /* ---- transport ---- */
+  function toggle() {
+    if (v.paused || v.ended) {
+      var p = v.play();
+      if (p && p.catch) { p.catch(function () {}); }
+    } else {
+      v.pause();
+    }
+  }
+  function nudge(by) {
+    var d = dur();
+    v.currentTime = Math.max(0, Math.min(d ? d - 0.08 : 0, v.currentTime + by));
+    show();
+  }
+
+  var idleT = 0;
+  function show() {
+    f.classList.remove('vp-idle');
+    clearTimeout(idleT);
+    if (v.paused || v.ended) { return; }
+    idleT = setTimeout(function () {
+      if (!v.paused && !f.contains(document.activeElement)) {
+        f.classList.add('vp-idle');
+      }
+    }, 2800);
+  }
+
+  function sync() {
+    var on = !v.paused && !v.ended;
+    f.classList.toggle('vp-on', on);
+    f.classList.toggle('vp-end', !!v.ended);
+    bPlay.setAttribute('aria-label', on ? D.pause : D.play);
+    big.setAttribute('aria-label', v.ended ? D.replay : (on ? D.pause : D.play));
+    if (on) { run(); }
+    paint();
+    show();
+  }
+  ['play', 'playing', 'pause', 'ended', 'seeked', 'loadedmetadata',
+   'durationchange'].forEach(function (n) { v.addEventListener(n, sync); });
+  v.addEventListener('progress', paint);
+  v.addEventListener('timeupdate', paint);
+
+  big.addEventListener('click', toggle);
+  bPlay.addEventListener('click', toggle);
+  v.addEventListener('click', toggle);
+
+  /* ---- scrubbing ---- */
+  function at(e) {
+    var r = seek.getBoundingClientRect();
+    if (!r.width) { return 0; }
+    var x = Math.min(r.right, Math.max(r.left, e.clientX));
+    return ((x - r.left) / r.width) * dur();
+  }
+  function commit(t) {
+    var d = dur();
+    if (!d || !isFinite(t)) { return; }
+    v.currentTime = Math.max(0, Math.min(d - 0.08, t));
+  }
+  seek.addEventListener('pointerdown', function (e) {
+    if (!dur() || e.button > 0) { return; }
+    f.classList.add('vp-drag');
+    dragT = at(e);
+    try { seek.setPointerCapture(e.pointerId); } catch (err) {}
+    paint();
+    e.preventDefault();
+  });
+  seek.addEventListener('pointermove', function (e) {
+    if (dragT === null) { return; }
+    dragT = at(e);
+    paint();
+    // scrubbing inside what is already downloaded costs nothing, so do it live;
+    // outside it, wait for release rather than firing a request per pixel
+    if (inBuffer(dragT)) { commit(dragT); }
+  });
+  function drop() {
+    if (dragT === null) { return; }
+    var t = dragT;
+    dragT = null;
+    f.classList.remove('vp-drag');
+    commit(t);
+    paint();
+    show();
+  }
+  ['pointerup', 'pointercancel'].forEach(function (n) {
+    seek.addEventListener(n, drop);
+  });
+  seek.addEventListener('keydown', function (e) {
+    var k = e.key, d = dur(), step = e.shiftKey ? 10 : 5;
+    if (k === 'ArrowRight' || k === 'ArrowUp') { nudge(step); }
+    else if (k === 'ArrowLeft' || k === 'ArrowDown') { nudge(-step); }
+    else if (k === 'Home') { commit(0); }
+    else if (k === 'End') { commit(d - 0.1); }
+    else if (k === ' ' || k === 'Enter') { toggle(); }
+    else { return; }
+    e.preventDefault();
+    show();
+  });
+
+  /* ---- sound ---- */
+  bMute.addEventListener('click', function () {
+    if (v.muted || v.volume === 0) {
+      v.muted = false;
+      if (v.volume === 0) { v.volume = 0.8; }
+    } else {
+      v.muted = true;
+    }
+  });
+  if (range) {
+    range.addEventListener('input', function () {
+      v.volume = +range.value;
+      v.muted = (+range.value === 0);
+    });
+  }
+  v.addEventListener('volumechange', function () {
+    var off = v.muted || v.volume === 0;
+    f.classList.toggle('vp-muted', off);
+    bMute.setAttribute('aria-label', off ? D.unmute : D.mute);
+    if (range && document.activeElement !== range) {
+      range.value = off ? 0 : v.volume;
+    }
+  });
+
+  /* ---- full screen ---- */
+  function fsNow() { return document.fullscreenElement || document.webkitFullscreenElement; }
+  function full() {
+    if (fsNow()) {
+      if (document.exitFullscreen) { document.exitFullscreen(); }
+      else if (document.webkitExitFullscreen) { document.webkitExitFullscreen(); }
+      return;
+    }
+    if (f.requestFullscreen) { f.requestFullscreen().catch(function () {}); }
+    else if (f.webkitRequestFullscreen) { f.webkitRequestFullscreen(); }
+    else if (v.webkitEnterFullscreen) { v.webkitEnterFullscreen(); }  // iPhone
+  }
+  bFull.addEventListener('click', full);
+  ['fullscreenchange', 'webkitfullscreenchange'].forEach(function (n) {
+    document.addEventListener(n, function () {
+      var on = fsNow() === f;
+      f.classList.toggle('vp-fs', on);
+      bFull.setAttribute('aria-label', on ? D.unfull : D.full);
+      show();
+    });
+  });
+
+  /* ---- keyboard, on the player as a whole ---- */
+  f.addEventListener('keydown', function (e) {
+    if (seek.contains(e.target)) { return; }
+    var k = (e.key || '').toLowerCase();
+    if (e.target.tagName === 'BUTTON' && (k === ' ' || k === 'enter')) { return; }
+    if (k === ' ' || k === 'k') { toggle(); }
+    else if (k === 'arrowright') { nudge(5); }
+    else if (k === 'arrowleft') { nudge(-5); }
+    else if (k === 'm') { bMute.click(); }
+    else if (k === 'f') { full(); }
+    else { return; }
+    e.preventDefault();
+    show();
+  });
+
+  /* ---- showing and hiding the strip ---- */
+  ['pointermove', 'pointerdown', 'focusin'].forEach(function (n) {
+    f.addEventListener(n, show);
+  });
+  f.addEventListener('pointerleave', function (e) {
+    if (e.pointerType === 'mouse' && !v.paused && !f.contains(document.activeElement)) {
+      f.classList.add('vp-idle');
+    }
+  });
+
+  /* ---- delivery ----
+     GitHub Pages holds a file at the edge for ten minutes, so a visitor who
+     arrives cold waits on the origin. Start fetching as the section comes near
+     and the wait happens while they are still reading. Guarded: load() rewinds
+     a playing element, so it is only called on one that has not started. */
+  function warm() {
+    if (v.preload === 'auto' || v.readyState > 0 || v.currentTime || !v.paused) { return; }
+    v.preload = 'auto';
+    v.load();
+  }
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (es) {
+      es.forEach(function (en) {
+        if (!en.isIntersecting) { return; }
+        io.unobserve(en.target);
+        warm();
+      });
+    }, {rootMargin: '600px 0px'});
+    io.observe(f);
+  } else {
+    warm();
+  }
+
+  // Two stalls mean the line cannot carry this copy. Drop to the light one and
+  // put the viewer back where they were - a softer picture beats a stutter.
+  var stalls = 0, dropped = false;
+  v.addEventListener('waiting', function () {
+    if (dropped || !D.light || v.seeking || v.paused) { return; }
+    if (++stalls < 2) { return; }
+    dropped = true;
+    var t = v.currentTime;
+    v.src = D.light;
+    v.load();
+    v.addEventListener('loadedmetadata', function () {
+      if (t) { v.currentTime = t; }
+      var p = v.play();
+      if (p && p.catch) { p.catch(function () {}); }
+    }, {once: true});
+  });
+
+  sync();
+});
+
 
   // last resort: if anything above threw, or the observer never fires,
   // the page must not stay blank
@@ -491,37 +858,6 @@ footer{border-top:1px solid var(--line-2);padding-block:34px 42px}
   }, {rootMargin:'0px 0px -10% 0px', threshold:0.05});
   els.forEach(function(e){ io.observe(e); });
 
-  // Start fetching the film before anyone asks for it.
-  //
-  // GitHub Pages serves a cold file from origin very slowly - measured at
-  // 12 KB/s on a first hit, which meant 85 seconds of frozen poster after the
-  // visitor pressed play. preload="none" keeps the page load light but defers
-  // that whole fetch to the click. Warming it as the section comes near means
-  // the slow part happens while they are still reading, and the click is
-  // instant. Once the file is at the edge cache everyone after them is fast.
-  var film = document.querySelector('.film');
-  if (film && 'IntersectionObserver' in window) {
-    var warm = new IntersectionObserver(function (entries) {
-      entries.forEach(function (en) {
-        if (!en.isIntersecting) return;
-        var v = en.target.querySelector('video');
-        if (v && v.preload !== 'auto') { v.preload = 'auto'; v.load(); }
-        warm.unobserve(en.target);
-      });
-    }, {rootMargin: '500px 0px'});
-    warm.observe(film);
-  }
-
-  // A slow start should read as loading, not as broken.
-  var fv = film && film.querySelector('video');
-  if (fv) {
-    ['waiting', 'stalled'].forEach(function (n) {
-      fv.addEventListener(n, function () { film.classList.add('buffering'); });
-    });
-    ['playing', 'canplay', 'pause'].forEach(function (n) {
-      fv.addEventListener(n, function () { film.classList.remove('buffering'); });
-    });
-  }
 })();
 </script>
 
